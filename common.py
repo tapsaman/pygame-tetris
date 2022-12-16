@@ -4,7 +4,8 @@ class Settings:
     tileSize = 20
     levelWidth = 10
     levelHeight = 23
-    lockTime = 500
+    lockTime = 400
+    turnTime = 1200
     limitHeight = 13
     speed = 0.05
     fastforwardSpeed = 0.5

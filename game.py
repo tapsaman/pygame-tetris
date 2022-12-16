@@ -27,6 +27,20 @@ class DefaultState(DrawState):
         if currentBlock == None:
             return
         
+        if game.input.hardDrop:
+            newPos = currentBlock.position.Copy()
+            
+            # Add to Y position until it collides, remove reminder
+            while utils.CheckCollision(newPos, currentBlock.tilePositions, game.groundMap) == False:
+                newPos.y += Settings.tileSize / 2
+            
+            newPos.y = utils.RoundTo(newPos.y, Settings.tileSize)
+            self.lockTimer = 0
+            currentBlock.position = newPos
+            game.stateMachine.TransitionTo("Locking")
+
+            return
+        
         newPos = currentBlock.position.Copy()
         speed = Settings.fastforwardSpeed if game.input.y > 0 else Settings.speed
         
@@ -146,41 +160,73 @@ class TurningState(DrawState):
         self.timer = 0
 
     def Enter(self):
-        pass
+        self.game.limitLineTimer = 0
     
     def Update(self):
         game = self.game
         self.timer += game.delta
 
-        if self.timer > 900:
+        if self.timer > Settings.turnTime:
             self.timer = 0
-            
-            for xRow in self.game.groundMap:
-                for y in range(len(xRow)):
-                    xRow[y] = 0 if y < Settings.limitHeight or xRow[y] == 1 else 1
+
+            self.FlipGroundMap()
             
             game.stateMachine.TransitionTo("Default")
     
     def Draw(self):
         game = self.game
-        game.DrawWall(Settings.wallColor)
+
+        changePercentage = self.timer / Settings.turnTime
+        wallColor = utils.LerpColors(changePercentage, Settings.wallColor, Settings.groundColor)
+        groundColor = utils.LerpColors(changePercentage, Settings.groundColor, Settings.wallColor)
+
+        game.DrawWall(wallColor)
 
         for tileX in range(Settings.levelWidth):
-            for tileY in range(Settings.levelHeight):
-                if game.groundMap[tileX][tileY] == 0:
+            for tileY0 in range(Settings.limitHeight, Settings.levelHeight):
+                if game.groundMap[tileX][tileY0] == 0:
                     continue
                 
                 x = tileX * Settings.tileSize + Settings.wallRect.left
-                y = tileY * Settings.tileSize + Settings.wallRect.top
+                y0 = tileY0 * Settings.tileSize + Settings.wallRect.top
+                y1 = (Settings.levelHeight - 1 - tileY0 + Settings.limitHeight) * Settings.tileSize + Settings.wallRect.top
 
-                # groundHeight = Settings.levelHeightc
+                y = utils.Lerp(changePercentage, 1, y1, 0, y0)
 
                 tileRect = pygame.Rect(x, y, Settings.tileSize, Settings.tileSize)
-                pygame.draw.rect(pygame.screen, Settings.groundColor, tileRect)
+                pygame.draw.rect(pygame.screen, groundColor, tileRect)
 
         img = Settings.font.render("state: turning", True, (0, 0, 0))
         pygame.screen.blit(img, (220, 300))
         
+    def FlipGroundMap(self):
+        game = self.game
+        '''
+        for xRow in game.groundMap:
+            for tileY0 in range(Settings.levelHeight):
+                if tileY0 < Settings.limitHeight:
+                    xRow[tileY0] = 0
+                else:
+                    tileY1 = Settings.levelHeight - 1 - tileY0 + Settings.limitHeight
+                    #newValue = xRow[prevYOfNewValue]
+                    xRow[tileY0] = 0 if xRow[tileY1] == 1 else 1'''
+        
+        newGroundMap = []
+
+        for x in range(Settings.levelWidth):
+            newXRow = []
+            newGroundMap.append(newXRow)
+            
+            for tileY0 in range(Settings.levelHeight):
+                if tileY0 < Settings.limitHeight:
+                    newXRow.append(0)
+                else:
+                    tileY1 = Settings.levelHeight - 1 - tileY0 + Settings.limitHeight
+                    #newValue = xRow[prevYOfNewValue]
+                    newXRow.append(0 if game.groundMap[x][tileY1] == 1 else 1)
+        
+        game.groundMap = newGroundMap
+
     def Exit(self):
         pass
 
@@ -223,7 +269,11 @@ class Game:
         self.DrawCurrentBlock(pygame.screen)
 
     def DrawWall(self, color):
-        pygame.draw.rect(pygame.screen, color, Settings.wallRect)
+        levelWallRect = pygame.Rect(Settings.wallRect)
+        levelWallRect.top += Settings.limitHeight * Settings.tileSize
+        levelWallRect.height -= Settings.limitHeight * Settings.tileSize
+        pygame.draw.rect(pygame.screen, Settings.wallColor, Settings.wallRect)
+        pygame.draw.rect(pygame.screen, color, levelWallRect)
 
     def DrawGround(self, color):
         for tileX in range(Settings.levelWidth):

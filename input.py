@@ -58,6 +58,7 @@ class Input:
         self.rotate = 0
         self.confirm = False
         self.cancel = False
+        self.hardDrop = False
 
 class InputController:
     def __init__(self):
@@ -91,6 +92,9 @@ class InputController:
         
         if self.JustPressed(pygame.K_LEFT):
             input.x -= 1
+        
+        if self.JustPressed(pygame.K_SPACE):
+            input.hardDrop = True
         
         if self.JustPressed(pygame.K_ESCAPE):
             sys.exit()

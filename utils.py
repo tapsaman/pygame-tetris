@@ -25,6 +25,8 @@ def CheckCollision(position : Pos, tilePositions : tuple, groundMap : list) -> b
             or tileY < 0 or tileY >= Settings.levelHeight \
             or groundMap[tileX][tileY] != 0:
                 return True
+    
+    return False
 
 # Rounds to closest number divisible by divider
 def RoundTo(value, divider):
