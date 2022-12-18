@@ -14,7 +14,7 @@ black = (0,0,0)
 white = (255,255,255)
 
 pygame.screen = screen = pygame.display.set_mode(size)
-Settings.font = pygame.font.SysFont(None, 48)
+Settings.font = pygame.font.SysFont(None, 38)
 
 
 game = Game()

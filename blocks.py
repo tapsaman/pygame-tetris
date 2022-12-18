@@ -60,13 +60,58 @@ class Long(Block):
     tileShapes = (
         (Pos(-2, -1), Pos(-1, -1), Pos(0, -1), Pos(1, -1)),
         (Pos(-1, -2), Pos(-1, -1), Pos(-1, 0), Pos(-1, 1)),
-        (Pos(-2, -1), Pos(-1, -1), Pos(0, -1), Pos(1, -1)),
-        (Pos(-1, -2), Pos(-1, -1), Pos(-1, 0), Pos(-1, 1))
+        (Pos(-2, 0), Pos(-1, 0), Pos(0, 0), Pos(1, 0)),
+        (Pos(0, -2), Pos(0, -1), Pos(0, 0), Pos(0, 1))
+    )
+
+class T(Block):
+    tileShapes = (
+        (Pos(-1, -1), Pos(-2, -0), Pos(-1, 0), Pos(0, 0)),
+        (Pos(0, -1), Pos(-1, -2), Pos(-1, -1), Pos(-1, 0)),
+        (Pos(0, 0), Pos(1, -1), Pos(0, -1), Pos(-1, -1)),
+        (Pos(-1, 0), Pos(0, 1), Pos(0, 0), Pos(0, -1))
+    )
+
+class Z(Block):
+    tileShapes = (
+        (Pos(-2, -1), Pos(-1, -1), Pos(-1, 0), Pos(0, 0)),
+        (Pos(0, -2), Pos(0, -1), Pos(-1, -1), Pos(-1, 0)),
+        (Pos(1, 0), Pos(0, 0), Pos(0, -1), Pos(-1, -1)),
+        (Pos(-1, 1), Pos(-1, 0), Pos(0, 0), Pos(0, -1))
+    )
+
+class RevZ(Block):
+    tileShapes = (
+        (Pos(-1, 0), Pos(0, 0), Pos(0, -1), Pos(1, -1)),
+        (Pos(-1, -1), Pos(-1, 0), Pos(0, 0), Pos(0, 1)),
+        (Pos(0, -1), Pos(-1, -1), Pos(-1, 0), Pos(-2, 0)),
+        (Pos(-1, -2), Pos(-1, -1), Pos(0, -1), Pos(0, 0))
+    )
+
+class L(Block):
+    tileShapes = (
+        (Pos(-1, -2), Pos(-1, -1), Pos(-1, 0), Pos(0, 0)),
+        (Pos(-1, -1), Pos(-1, 0), Pos(0, -1), Pos(1, -1)),
+        (Pos(-1, -1), Pos(0, -1), Pos(0, 0), Pos(0, 1)),
+        (Pos(0, -1), Pos(-2, 0), Pos(-1, 0), Pos(0, 0))
+    )
+
+class RevL(Block):
+    tileShapes = (
+        (Pos(0, -2), Pos(0, -1), Pos(0, 0), Pos(-1, 0)),
+        (Pos(-1, -1), Pos(-1, 0), Pos(0, 0), Pos(1, 0)),
+        (Pos(-1, -1), Pos(0, -1), Pos(-1, 0), Pos(-1, 1)),
+        (Pos(-2, -1), Pos(-1, -1), Pos(0, -1), Pos(0, 0))
     )
 
 blocks = (
     Square(),
-    Long()
+    Long(),
+    T(),
+    Z(),
+    RevZ(),
+    L(),
+    RevL(),
 )
 
 def GetRandom():

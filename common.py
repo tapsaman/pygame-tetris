@@ -2,6 +2,7 @@ import pygame
 
 class Settings:
     tileSize = 20
+    wiggleRoom = 8
     levelWidth = 10
     levelHeight = 23
     lockTime = 400

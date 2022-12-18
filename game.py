@@ -78,7 +78,15 @@ class DefaultState(DrawState):
             if utils.CheckCollision(newPos, currentBlock.tilePositions, game.groundMap):
                 # New X position collides, do not move on X axis
                 newPos.x = currentBlock.position.x
-        
+                yReminderToNext = newPos.y % Settings.tileSize
+
+                # Check if block can 'wiggle' into next open x block
+                if yReminderToNext < Settings.wiggleRoom:
+                    checkPos = Pos(newPos.x + Settings.tileSize * game.input.x, utils.RoundTo(newPos.y + Settings.tileSize, Settings.tileSize))
+                    
+                    if utils.CheckCollision(checkPos, currentBlock.tilePositions, game.groundMap) == False:
+                        newPos = checkPos
+
         currentBlock.position = newPos
 
         if game.input.rotate != 0:

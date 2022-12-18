@@ -64,6 +64,7 @@ class InputController:
     def __init__(self):
         self.keyState = None
         self.previousKeyState = pygame.key.get_pressed()
+        pygame.key.set_repeat(200, 25)
 
     def Update(self):
         self.previousKeyState = self.keyState
@@ -86,12 +87,13 @@ class InputController:
         
         if self.JustPressed(pygame.K_z):
             input.rotate -= 1
-        
+        '''
         if self.JustPressed(pygame.K_RIGHT):
             input.x += 1
         
         if self.JustPressed(pygame.K_LEFT):
             input.x -= 1
+        '''
         
         if self.JustPressed(pygame.K_SPACE):
             input.hardDrop = True
@@ -100,7 +102,12 @@ class InputController:
             sys.exit()
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    input.x -= 1
+                elif event.key == pygame.K_RIGHT:
+                    input.x += 1
+            elif event.type == pygame.QUIT:
                 sys.exit()
         
         return input
