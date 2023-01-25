@@ -238,6 +238,17 @@ class TurningState(DrawState):
     def Exit(self):
         pass
 
+def TestWiggleGame():
+    game = Game()
+    game.groundMap[5][16] = 1
+    game.groundMap[5][17] = 1
+    game.groundMap[5][20] = 1
+    game.groundMap[6][16] = 1
+    game.groundMap[6][17] = 1
+    game.groundMap[6][20] = 1
+    return game
+
+
 class Game:
     def __init__(self):
         self.Reset()
